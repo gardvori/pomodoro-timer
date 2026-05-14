@@ -3,268 +3,353 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pomodoro Timer</title>
+<title>Pomodoro Timer — Focus &amp; Productivity</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  :root{
-    --bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#c9d1d9;
-    --accent:#ff6b6b;--accent2:#58a6ff;--green:#3fb950;--yellow:#d29922;
+  :root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface2: #222240;
+    --accent: #e94560;
+    --accent2: #0f3460;
+    --text: #eee;
+    --text2: #aaa;
+    --ring: #e94560;
+    --ring-bg: #2a1a2e;
+    --success: #4ecca3;
   }
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--text);min-height:100vh;display:flex;
-    flex-direction:column;align-items:center;justify-content:center;padding:20px}
-  h1{font-size:2rem;margin-bottom:4px;color:#fff}
-  .subtitle{color:#8b949e;margin-bottom:32px;font-size:.95rem}
-  .tabs{display:flex;gap:4px;margin-bottom:32px;background:var(--surface);
-    border:1px solid var(--border);border-radius:10px;padding:4px}
-  .tab{padding:8px 20px;border-radius:7px;border:none;cursor:pointer;font-size:.9rem;
-    font-weight:600;background:transparent;color:#8b949e;transition:.2s}
-  .tab.active{background:var(--accent);color:#fff}
-  .tab.active[data-mode="short"]{background:var(--accent2)}
-  .tab.active[data-mode="long"]{background:var(--green)}
-  .timer-display{font-size:6rem;font-weight:700;font-variant-numeric:tabular-nums;
-    letter-spacing:-2px;margin-bottom:8px;color:#fff}
-  .timer-display.warning{color:var(--yellow)}
-  .timer-display.danger{color:var(--accent)}
-  .session-label{color:#8b949e;margin-bottom:32px;font-size:1.1rem}
-  .controls{display:flex;gap:12px;margin-bottom:40px}
-  .btn{padding:14px 36px;border-radius:10px;border:none;cursor:pointer;
-    font-size:1rem;font-weight:600;transition:.15s}
-  .btn-start{background:var(--accent);color:#fff}
-  .btn-start:hover{background:#ff5252}
-  .btn-pause{background:var(--yellow);color:#000}
-  .btn-pause:hover{background:#e6a700}
-  .btn-reset{background:var(--surface);color:var(--text);border:1px solid var(--border)}
-  .btn-reset:hover{background:#21262d}
-  .stats{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
-  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    padding:16px 28px;text-align:center;min-width:120px}
-  .stat-card .num{font-size:1.8rem;font-weight:700;color:#fff}
-  .stat-card .lbl{font-size:.8rem;color:#8b949e;margin-top:4px}
-  .progress-ring{margin-bottom:24px}
-  .progress-ring circle{transition:stroke-dashoffset .3s}
-  .settings{margin-top:32px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-  .settings label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:#8b949e}
-  .settings input{width:80px;padding:6px 10px;border-radius:6px;border:1px solid var(--border);
-    background:var(--surface);color:var(--text);font-size:.9rem;text-align:center}
-  .settings input:focus{outline:none;border-color:var(--accent2)}
-  .history{margin-top:32px;width:100%;max-width:400px}
-  .history h3{font-size:.9rem;color:#8b949e;margin-bottom:8px;text-align:center}
-  .history-list{max-height:120px;overflow-y:auto}
-  .history-item{display:flex;justify-content:space-between;padding:6px 12px;
-    border-bottom:1px solid var(--border);font-size:.85rem}
-  .history-item .mode{font-weight:600}
-  .history-item .mode.pomodoro{color:var(--accent)}
-  .history-item .mode.short{color:var(--accent2)}
-  .history-item .mode.long{color:var(--green)}
-  .history-item .time{color:#8b949e}
-  .notification-permission{margin-top:16px;font-size:.8rem;color:#8b949e}
-  .notification-permission button{background:none;border:1px solid var(--border);
-    color:var(--accent2);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem}
-  footer{margin-top:40px;font-size:.75rem;color:#484f58}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border-bottom: 1px solid #2a2a4a;
+  }
+  header h1 { font-size: 1.3rem; font-weight: 700; }
+  header .icon { font-size: 1.5rem; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 4px; margin: 24px 0 16px;
+    background: var(--surface); border-radius: 12px; padding: 4px;
+  }
+  .tab {
+    padding: 8px 20px; border-radius: 9px; border: none; cursor: pointer;
+    background: transparent; color: var(--text2); font-size: 0.9rem; font-weight: 600;
+    transition: all .2s;
+  }
+  .tab.active { background: var(--accent); color: #fff; }
+  .tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
+
+  /* Timer circle */
+  .timer-wrap {
+    position: relative; width: 300px; height: 300px; margin: 20px 0;
+  }
+  svg.progress-ring { transform: rotate(-90deg); }
+  .progress-ring-bg {
+    fill: none; stroke: var(--ring-bg); stroke-width: 8;
+  }
+  .progress-ring-bar {
+    fill: none; stroke: var(--ring); stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s linear, stroke 0.3s;
+  }
+  .timer-center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .timer-center .time { font-size: 3.6rem; font-weight: 300; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+  .timer-center .label { font-size: 0.85rem; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 3px; }
+
+  /* Controls */
+  .controls { display: flex; gap: 12px; margin: 8px 0 24px; }
+  .btn {
+    padding: 12px 32px; border-radius: 10px; border: none; cursor: pointer;
+    font-size: 1rem; font-weight: 600; transition: all .2s;
+  }
+  .btn-start { background: var(--accent); color: #fff; }
+  .btn-start:hover { background: #d63851; transform: translateY(-1px); }
+  .btn-reset { background: var(--surface2); color: var(--text); }
+  .btn-reset:hover { background: #2a2a50; }
+
+  /* Settings */
+  .settings {
+    width: 100%; max-width: 420px; background: var(--surface);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 24px;
+  }
+  .settings h3 { font-size: 0.95rem; margin-bottom: 14px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+  .field { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .field label { font-size: 0.9rem; }
+  .field input[type=number] {
+    width: 72px; padding: 6px 10px; background: var(--surface2); border: 1px solid #333360;
+    border-radius: 8px; color: var(--text); font-size: 0.9rem; text-align: center;
+    outline: none;
+  }
+  .field input:focus { border-color: var(--accent); }
+
+  /* Stats */
+  .stats {
+    width: 100%; max-width: 420px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat-box {
+    background: var(--surface); border-radius: 12px; padding: 14px; text-align: center;
+  }
+  .stat-box .num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+  .stat-box .lbl { font-size: 0.75rem; color: var(--text2); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Toast toast */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--success); color: #000; padding: 14px 28px; border-radius: 10px;
+    font-weight: 600; opacity: 0; transition: all .4s; z-index: 100; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  .footer { font-size:0.78rem; color: #555; margin: 12px 0 20px; }
 </style>
 </head>
 <body>
 
-<h1>🍅 Pomodoro Timer</h1>
-<p class="subtitle">Stay focused. Take breaks. Be productive.</p>
+<header>
+  <span class="icon">🍅</span>
+  <h1>Pomodoro Timer</h1>
+</header>
 
 <div class="tabs">
-  <button class="tab active" data-mode="pomodoro" onclick="setMode('pomodoro')">Pomodoro</button>
-  <button class="tab" data-mode="short" onclick="setMode('short')">Short Break</button>
-  <button class="tab" data-mode="long" onclick="setMode('long')">Long Break</button>
+  <button class="tab active" data-mode="pomodoro" onclick="setMode('pomodoro',this)">Pomodoro</button>
+  <button class="tab" data-mode="shortBreak" onclick="setMode('shortBreak',this)">Short Break</button>
+  <button class="tab" data-mode="longBreak" onclick="setMode('longBreak',this)">Long Break</button>
 </div>
 
-<div class="progress-ring">
-  <svg width="260" height="260" viewBox="0 0 260 260">
-    <circle cx="130" cy="130" r="120" fill="none" stroke="#21262d" stroke-width="8"/>
-    <circle id="progress" cx="130" cy="130" r="120" fill="none" stroke="var(--accent)"
-      stroke-width="8" stroke-linecap="round"
-      stroke-dasharray="753.98" stroke-dashoffset="0"
-      transform="rotate(-90 130 130)"/>
+<div class="timer-wrap">
+  <svg class="progress-ring" width="300" height="300">
+    <circle class="progress-ring-bg" cx="150" cy="150" r="140" />
+    <circle class="progress-ring-bar" id="ringBar" cx="150" cy="150" r="140"
+      stroke-dasharray="879.64" stroke-dashoffset="0" />
   </svg>
+  <div class="timer-center">
+    <div class="time" id="time">25:00</div>
+    <div class="label" id="phaseLabel">Focus Time</div>
+  </div>
 </div>
-
-<div class="timer-display" id="display">25:00</div>
-<div class="session-label" id="sessionLabel">Focus Time</div>
 
 <div class="controls">
-  <button class="btn btn-start" id="btnStart" onclick="toggleTimer()">▶ Start</button>
-  <button class="btn btn-reset" onclick="resetTimer()">↺ Reset</button>
+  <button class="btn btn-start" id="startBtn" onclick="toggleTimer()">▶ START</button>
+  <button class="btn btn-reset" onclick="resetTimer()">↺ RESET</button>
 </div>
 
 <div class="stats">
-  <div class="stat-card"><div class="num" id="sessionsDone">0</div><div class="lbl">Sessions</div></div>
-  <div class="stat-card"><div class="num" id="totalFocus">0m</div><div class="lbl">Focus Time</div></div>
-  <div class="stat-card"><div class="num" id="streak">0</div><div class="lbl">Streak 🔥</div></div>
+  <div class="stat-box">
+    <div class="num" id="sessionsDone">0</div>
+    <div class="lbl">Sessions</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" id="totalMinutes">0</div>
+    <div class="lbl">Minutes</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" id="currentStreak">0</div>
+    <div class="lbl">Streak</div>
+  </div>
 </div>
 
 <div class="settings">
-  <label>Pomodoro (min) <input type="number" id="setPomodoro" value="25" min="1" max="90"></label>
-  <label>Short Break <input type="number" id="setShort" value="5" min="1" max="30"></label>
-  <label>Long Break <input type="number" id="setLong" value="15" min="1" max="60"></label>
+  <h3>⚙ Settings</h3>
+  <div class="field">
+    <label>Pomodoro (min)</label>
+    <input type="number" id="setPomodoro" value="25" min="1" max="90" onchange="updateSettings()">
+  </div>
+  <div class="field">
+    <label>Short Break (min)</label>
+    <input type="number" id="setShort" value="5" min="1" max="30" onchange="updateSettings()">
+  </div>
+  <div class="field">
+    <label>Long Break (min)</label>
+    <input type="number" id="setLong" value="15" min="1" max="60" onchange="updateSettings()">
+  </div>
+  <div class="field">
+    <label>Sessions before long break</label>
+    <input type="number" id="setSessions" value="4" min="2" max="10" onchange="updateSettings()">
+  </div>
 </div>
 
-<div class="notification-permission">
-  <button onclick="requestNotification()">🔔 Enable Notifications</button>
-</div>
-
-<div class="history" id="historySection" style="display:none">
-  <h3>📋 Session History</h3>
-  <div class="history-list" id="historyList"></div>
-</div>
-
-<footer>Built with ❤️ by Armodeus · gardvori/pomodoro-timer</footer>
+<div class="toast" id="toast"></div>
+<div class="footer">Made with ♥ by Armodeus — <a href="https://github.com/gardvori/pomodoro-timer" style="color:var(--accent);text-decoration:none;" target="_blank">github.com/gardvori/pomodoro-timer</a></div>
 
 <script>
-const MODES = { pomodoro: 25, short: 5, long: 15 };
-let currentMode = 'pomodoro';
-let totalSeconds = MODES[currentMode] * 60;
-let initialSeconds = totalSeconds;
-let interval = null;
+const CIRCLE_R = 140;
+const CIRCUM = 2 * Math.PI * CIRCLE_R;
+
+let config = {
+  pomodoro: 25,
+  shortBreak: 5,
+  longBreak: 15,
+  sessionsBeforeLong: 4
+};
+
+let mode = 'pomodoro'; // pomodoro | shortBreak | longBreak
+let totalSec = config.pomodoro * 60;
+let remaining = totalSec;
 let running = false;
-let sessionsDone = 0;
-let totalFocusMin = 0;
+let interval = null;
+let sessionsDone = parseInt(localStorage.getItem('pm_sessions') || '0');
 let streak = 0;
-let history = [];
-let endTime = 0;
 
-const display = document.getElementById('display');
-const progress = document.getElementById('progress');
-const btnStart = document.getElementById('btnStart');
-const sessionLabel = document.getElementById('sessionLabel');
-const C = 2 * Math.PI * 120;
+const ringBar = document.getElementById('ringBar');
+const timeEl = document.getElementById('time');
+const phaseLabel = document.getElementById('phaseLabel');
+const startBtn = document.getElementById('startBtn');
 
-function formatTime(s) {
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
-  return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+ringBar.style.strokeDasharray = CIRCUM;
+ringBar.style.strokeDashoffset = 0;
+
+const LABELS = { pomodoro: 'Focus Time', shortBreak: 'Short Break', longBreak: 'Long Break' };
+const RING_COLORS = { pomodoro: '#e94560', shortBreak: '#4ecca3', longBreak: '#0abde3' };
+
+function setTimeLabel() {
+  const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const s = String(remaining % 60).padStart(2, '0');
+  timeEl.textContent = `${m}:${s}`;
 }
 
-function updateDisplay() {
-  display.textContent = formatTime(totalSeconds);
-  const pct = 1 - totalSeconds / initialSeconds;
-  progress.style.strokeDashoffset = C * (1 - pct);
-  document.title = `${formatTime(totalSeconds)} — Pomodoro`;
-  if (totalSeconds <= 30 && totalSeconds > 10) display.className = 'timer-display warning';
-  else if (totalSeconds <= 10) display.className = 'timer-display danger';
-  else display.className = 'timer-display';
+function setProgress() {
+  ringBar.style.strokeDashoffset = CIRCUM * (1 - remaining / totalSec);
 }
 
-function setMode(mode) {
+function refreshUI() {
+  setTimeLabel();
+  setProgress();
+  phaseLabel.textContent = LABELS[mode];
+  ringBar.style.stroke = RING_COLORS[mode];
+  document.getElementById('sessionsDone').textContent = sessionsDone;
+  document.getElementById('totalMinutes').textContent = sessionsDone * config.pomodoro;
+  document.getElementById('currentStreak').textContent = streak;
+}
+
+function setMode(m, btn) {
   pauseTimer();
-  currentMode = mode;
-  const custom = parseInt(document.getElementById('set' + mode.charAt(0).toUpperCase() + mode.slice(1)).value) || MODES[mode];
-  totalSeconds = custom * 60;
-  initialSeconds = totalSeconds;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
-  const labels = { pomodoro: 'Focus Time', short: 'Short Break', long: 'Long Break' };
-  sessionLabel.textContent = labels[mode];
-  progress.style.stroke = mode === 'pomodoro' ? 'var(--accent)' : mode === 'short' ? 'var(--accent2)' : 'var(--green)';
-  updateDisplay();
+  mode = m;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  totalSec = config[m] * 60;
+  remaining = totalSec;
+  refreshUI();
 }
 
 function toggleTimer() {
-  if (running) pauseTimer();
-  else startTimer();
+  if (running) { pauseTimer(); } else { startTimer(); }
 }
 
 function startTimer() {
-  if (running) return;
+  if (remaining <= 0) remaining = totalSec;
   running = true;
-  endTime = Date.now() + totalSeconds * 1000;
-  btnStart.textContent = '⏸ Pause';
-  btnStart.className = 'btn btn-pause';
+  startBtn.textContent = '⏸ PAUSE';
+  startBtn.style.background = '#f39c12';
+
+  if (Notification.permission === 'default') Notification.requestPermission();
+
   interval = setInterval(() => {
-    const remaining = Math.round((endTime - Date.now()) / 1000);
-    totalSeconds = Math.max(0, remaining);
-    updateDisplay();
-    if (totalSeconds <= 0) completeSession();
-  }, 200);
+    remaining--;
+    refreshUI();
+    if (remaining <= 0) {
+      clearInterval(interval);
+      running = false;
+      startBtn.textContent = '▶ START';
+      startBtn.style.background = '';
+      onComplete();
+    }
+  }, 1000);
 }
 
 function pauseTimer() {
   if (!running) return;
-  running = false;
   clearInterval(interval);
-  btnStart.textContent = '▶ Start';
-  btnStart.className = 'btn btn-start';
+  running = false;
+  startBtn.textContent = '▶ START';
+  startBtn.style.background = '';
 }
 
 function resetTimer() {
   pauseTimer();
-  const custom = parseInt(document.getElementById('set' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1)).value) || MODES[currentMode];
-  totalSeconds = custom * 60;
-  initialSeconds = totalSeconds;
-  updateDisplay();
+  remaining = totalSec;
+  refreshUI();
 }
 
-function completeSession() {
-  pauseTimer();
-  const now = new Date();
-  const entry = { mode: currentMode, time: now.toLocaleTimeString(), date: now.toLocaleDateString() };
-  history.unshift(entry);
-  if (history.length > 20) history.pop();
-  if (currentMode === 'pomodoro') {
+function onComplete() {
+  const completionSound = new AudioContext();
+  const osc = completionSound.createOscillator();
+  const gain = completionSound.createGain();
+  osc.connect(gain);
+  gain.connect(completionSound.destination);
+  osc.frequency.value = 880;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0.3, completionSound.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, completionSound.currentTime + 1.2);
+  osc.start(completionSound.currentTime);
+  osc.stop(completionSound.currentTime + 1.2);
+
+  if (Notification.permission === 'granted') {
+    const n = new Notification('🍅 Pomodoro Timer', {
+      body: mode === 'pomodoro' ? 'Great work! Time for a break.' : 'Break over! Back to focus.',
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🍅</text></svg>'
+    });
+    setTimeout(() => n.close(), 6000);
+  }
+
+  if (mode === 'pomodoro') {
     sessionsDone++;
-    totalFocusMin += Math.round(initialSeconds / 60);
     streak++;
-  }
-  updateStats();
-  renderHistory();
-  notify();
-  // Auto-switch
-  if (currentMode === 'pomodoro') {
-    setMode(sessionsDone % 4 === 0 ? 'long' : 'short');
+    localStorage.setItem('pm_sessions', sessionsDone);
+    const next = streak % config.sessionsBeforeLong === 0 ? 'longBreak' : 'shortBreak';
+    showToast('🎉 Session complete! ' + (next === 'longBreak' ? 'Long break time!' : 'Short break time!'));
+    document.querySelector(`.tab[data-mode="${next}"]`)?.click();
+    autoAdvance(next);
   } else {
-    setMode('pomodoro');
+    showToast('💪 Break over! Back to Pomodoro.');
+    document.querySelector('.tab[data-mode="pomodoro"]')?.click();
+    autoAdvance('pomodoro');
+  }
+  refreshUI();
+}
+
+function autoAdvance(nextMode) {
+  // Don't auto-start, just switch tab/mode. User clicks start.
+  // But we could optionally do: setTimeout(() => { if(!running) startTimer(); }, 500)
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function updateSettings() {
+  config.pomodoro = Math.max(1, +document.getElementById('setPomodoro').value || 25);
+  config.shortBreak = Math.max(1, +document.getElementById('setShort').value || 5);
+  config.longBreak = Math.max(1, +document.getElementById('setLong').value || 15);
+  config.sessionsBeforeLong = Math.max(2, +document.getElementById('setSessions').value || 4);
+  if (!running) {
+    totalSec = config[mode] * 60;
+    remaining = totalSec;
+    refreshUI();
   }
 }
 
-function updateStats() {
-  document.getElementById('sessionsDone').textContent = sessionsDone;
-  document.getElementById('totalFocus').textContent = totalFocusMin >= 60
-    ? `${Math.floor(totalFocusMin/60)}h ${totalFocusMin%60}m` : `${totalFocusMin}m`;
-  document.getElementById('streak').textContent = streak;
-}
-
-function renderHistory() {
-  const sec = document.getElementById('historySection');
-  const list = document.getElementById('historyList');
-  if (!history.length) { sec.style.display = 'none'; return; }
-  sec.style.display = 'block';
-  list.innerHTML = history.map(h =>
-    `<div class="history-item"><span class="mode ${h.mode}">${h.mode === 'pomodoro' ? '🍅 Pomodoro' : h.mode === 'short' ? '☕ Short Break' : '🌴 Long Break'}</span><span class="time">${h.date} ${h.time}</span></div>`
-  ).join('');
-}
-
-function notify() {
-  const msgs = { pomodoro: '🍅 Time for a break!', short: '☕ Back to focus!', long: '🌴 Back to work!' };
-  if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification('Pomodoro Timer', { body: msgs[currentMode] || 'Session complete!', icon: '🍅' });
-  }
-}
-
-function requestNotification() {
-  if ('Notification' in window) Notification.requestPermission();
-}
-
-// Settings listeners
-['Pomodoro','Short','Long'].forEach(m => {
-  document.getElementById('set' + m).addEventListener('change', () => {
-    if (!running) setMode(m.toLowerCase() === 'pomodoro' ? 'pomodoro' : m.toLowerCase());
-  });
-});
-
-// Keyboard shortcut
-document.addEventListener('keydown', e => {
-  if (e.code === 'Space') { e.preventDefault(); toggleTimer(); }
-  if (e.code === 'KeyR') resetTimer();
-});
-
-progress.style.strokeDasharray = C;
-progress.style.strokeDashoffset = 0;
-updateDisplay();
+// Init
+refreshUI();
 </script>
 </body>
 </html>

@@ -1,36 +1,46 @@
 # 🍅 Pomodoro Timer
 
-A beautiful, single-file Pomodoro Timer web app with dark theme. No dependencies, no build step — just open and go.
+A beautiful, minimalist Pomodoro Timer web app to boost your productivity.
+
+![Pomodoro Timer](https://img.shields.io/badge/Pomodoro-Timer-red?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
 
 ## Features
 
-- **Three modes**: Pomodoro (25min), Short Break (5min), Long Break (15min)
-- **Customizable durations** via settings panel
-- **Visual progress ring** with color-coded urgency
-- **Session tracking**: sessions completed, total focus time, streak counter
-- **Session history** log
-- **Browser notifications** when sessions complete
-- **Keyboard shortcuts**: `Space` to start/pause, `R` to reset
-- **Auto-switch** between focus and break modes
-- **Fully responsive** dark theme
+- **Three modes**: Pomodoro (25 min), Short Break (5 min), Long Break (15 min)
+- **Circular progress ring** with smooth SVG animation
+- **Session tracking**: sessions completed, total focus minutes, streak counter
+- **Configurable durations** — adjust all timers to your preference
+- **Browser notifications** when a session completes
+- **Audio alert** on completion (Web Audio API, no external files)
+- **Persistent stats** via localStorage
+- **Dark theme** with color-coded modes
+- **Fully offline** — no dependencies, no tracking, no ads
+
+## Live Demo
+
+🔗 **[gardvori.github.io/pomodoro-timer](https://gardvori.github.io/pomodoro-timer/)**
 
 ## Usage
 
-Open `index.html` in any modern browser, or visit the [GitHub Pages site](https://gardvori.github.io/pomodoro-timer/).
+1. Open the page in any modern browser
+2. Click **START** to begin a Pomodoro session
+3. Work until the timer rings 🔔
+4. Take a short break, then repeat!
+5. After 4 sessions, you'll get a long break
 
-## Keyboard Shortcuts
+## Tech Stack
 
-| Key | Action |
-|-----|--------|
-| `Space` | Start / Pause |
-| `R` | Reset |
-
-## Tech
-
-- Pure HTML + CSS + JavaScript
-- Zero dependencies
-- Dark theme inspired by GitHub Dark
+- Pure HTML + CSS + JavaScript (zero dependencies)
+- SVG for the progress ring
+- Web Audio API for completion sounds
+- Notifications API for browser alerts
+- localStorage for persistent stats
 
 ## License
 
-MIT © [gardvori](https://github.com/gardvori)
+MIT License — see [LICENSE](LICENSE) for details.
+
+## Author
+
+Built with ♥ by **Armodeus**
