@@ -1,46 +1,31 @@
 # 🍅 Pomodoro Timer
 
-A beautiful, minimalist Pomodoro Timer web app to boost your productivity.
-
-![Pomodoro Timer](https://img.shields.io/badge/Pomodoro-Timer-red?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+A beautiful, browser-based Pomodoro Timer to boost your productivity.
 
 ## Features
 
-- **Three modes**: Pomodoro (25 min), Short Break (5 min), Long Break (15 min)
-- **Circular progress ring** with smooth SVG animation
-- **Session tracking**: sessions completed, total focus minutes, streak counter
-- **Configurable durations** — adjust all timers to your preference
-- **Browser notifications** when a session completes
-- **Audio alert** on completion (Web Audio API, no external files)
-- **Persistent stats** via localStorage
-- **Dark theme** with color-coded modes
-- **Fully offline** — no dependencies, no tracking, no ads
-
-## Live Demo
-
-🔗 **[gardvori.github.io/pomodoro-timer](https://gardvori.github.io/pomodoro-timer/)**
+- 🍅 **Pomodoro Technique** — 25 min focus, 5 min short break, 15 min long break
+- 🎨 **Beautiful dark UI** — with animated circular progress ring
+- ⚙️ **Customizable durations** — adjust times to your workflow
+- 📊 **Session tracking** — completed sessions, best streak, total focus time
+- 💾 **Persistent stats** — saved in localStorage
+- 🔔 **Browser notifications** — get alerted when a session ends
+- 🔊 **Audio beep** — sound notification on completion
+- ⌨️ **Keyboard shortcut** — press Space to start/pause
+- 📱 **Fully responsive** — works on desktop and mobile
+- 🚫 **No dependencies** — single HTML file, no build tools
 
 ## Usage
 
-1. Open the page in any modern browser
-2. Click **START** to begin a Pomodoro session
-3. Work until the timer rings 🔔
-4. Take a short break, then repeat!
-5. After 4 sessions, you'll get a long break
+1. Open the page
+2. Pick a mode: Pomodoro, Short Break, or Long Break
+3. Click **Start** and focus!
+4. The timer auto-advances between focus and break sessions
 
-## Tech Stack
+## Deployment
 
-- Pure HTML + CSS + JavaScript (zero dependencies)
-- SVG for the progress ring
-- Web Audio API for completion sounds
-- Notifications API for browser alerts
-- localStorage for persistent stats
+Hosted on GitHub Pages. Just open the HTML file in any browser — it works offline too!
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
-
-## Author
-
-Built with ♥ by **Armodeus**
+MIT
